@@ -103,6 +103,29 @@ deploy-staging:
         - host: timekpr-staging.homelab.lan
           http:
             paths:
+            # API proxy rules - forward to backend service
+            - path: /api
+              pathType: Prefix
+              backend:
+                service:
+                  name: timekpr-ui-backend-service
+                  port:
+                    number: 5000
+            - path: /swagger-ui
+              pathType: Prefix
+              backend:
+                service:
+                  name: timekpr-ui-backend-service
+                  port:
+                    number: 5000
+            - path: /api-docs
+              pathType: Prefix
+              backend:
+                service:
+                  name: timekpr-ui-backend-service
+                  port:
+                    number: 5000
+            # Frontend static files - serve from frontend service
             - path: /
               pathType: Prefix
               backend:
@@ -201,6 +224,29 @@ deploy-production:
         - host: timekpr.homelab.lan
           http:
             paths:
+            # API proxy rules - forward to backend service
+            - path: /api
+              pathType: Prefix
+              backend:
+                service:
+                  name: timekpr-ui-backend-service
+                  port:
+                    number: 5000
+            - path: /swagger-ui
+              pathType: Prefix
+              backend:
+                service:
+                  name: timekpr-ui-backend-service
+                  port:
+                    number: 5000
+            - path: /api-docs
+              pathType: Prefix
+              backend:
+                service:
+                  name: timekpr-ui-backend-service
+                  port:
+                    number: 5000
+            # Frontend static files - serve from frontend service
             - path: /
               pathType: Prefix
               backend:
