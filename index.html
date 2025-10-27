@@ -228,10 +228,7 @@
                         <button type="button" class="btn btn-sm btn-secondary" onclick="setAllDays()">All Days</button>
                     </div>
                     <div style="display: flex; align-items: center; gap: var(--space-2); background: var(--bg-secondary); padding: var(--space-3) var(--space-4); border-radius: var(--radius-md); border: 1px solid var(--border-primary);">
-                        <div style="display: flex; align-items: center; gap: var(--space-2);">
-                            <input type="checkbox" id="enable-time-ranges" checked style="width: 16px; height: 16px;">
-                            <label for="enable-time-ranges" style="font-size: var(--font-size-sm); font-weight: 500; color: var(--text-secondary); white-space: nowrap;">Enable time ranges:</label>
-                        </div>
+                        <label style="font-size: var(--font-size-sm); font-weight: 500; color: var(--text-secondary); white-space: nowrap;">Quick set time:</label>
                         <input type="time" id="bulk-start-time" value="07:00" style="padding: var(--space-2); border: 1px solid var(--border-primary); border-radius: var(--radius-sm); background: var(--bg-elevated); color: var(--text-primary);">
                         <span style="color: var(--text-tertiary);">to</span>
                         <input type="time" id="bulk-end-time" value="21:00" style="padding: var(--space-2); border: 1px solid var(--border-primary); border-radius: var(--radius-sm); background: var(--bg-elevated); color: var(--text-primary);">
@@ -244,9 +241,10 @@
                     
                     <!-- Schedule Table -->
                     <div style="background: var(--bg-elevated); border: 1px solid var(--border-primary); border-radius: var(--radius-xl); overflow: hidden;">
-                        <div style="background: var(--bg-secondary); border-bottom: 2px solid var(--border-primary); padding: var(--space-4) var(--space-6); display: grid; grid-template-columns: 120px 1fr 1fr; gap: var(--space-4); align-items: center; font-weight: 600; color: var(--text-primary);">
+                        <div style="background: var(--bg-secondary); border-bottom: 2px solid var(--border-primary); padding: var(--space-4) var(--space-6); display: grid; grid-template-columns: 120px 1fr 60px 1fr; gap: var(--space-4); align-items: center; font-weight: 600; color: var(--text-primary);">
                             <div>Day</div>
                             <div>Daily Time Limit</div>
+                            <div>Enable</div>
                             <div>Allowed Time Range</div>
                         </div>
                         

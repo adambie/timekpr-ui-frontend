@@ -20,11 +20,6 @@ async function showSchedule(userId) {
         document.getElementById('scheduleModalUsername').textContent = user;
         document.getElementById('scheduleUserId').value = userId;
         
-        // Set checkbox state based on whether time ranges are non-default
-        const hasCustomTimeRanges = Object.values(schedule.intervals || {}).some(interval => 
-            interval.start_time !== '00:00' || interval.end_time !== '23:59'
-        );
-        document.getElementById('enable-time-ranges').checked = hasCustomTimeRanges;
         
         const scheduleRows = document.getElementById('schedule-rows');
         scheduleRows.innerHTML = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'].map((day, index) => {
@@ -34,8 +29,11 @@ async function showSchedule(userId) {
             const intervals = schedule.intervals || {};
             const dayInterval = intervals[dayKey] || { start_time: '00:00', end_time: '23:59' };
             
+            // Check if this day has custom time ranges (non-default)
+            const hasCustomTimeRange = dayInterval.start_time !== '00:00' || dayInterval.end_time !== '23:59';
+            
             return `
-                <div class="schedule-row" style="padding: var(--space-4) var(--space-6); display: grid; grid-template-columns: 120px 1fr 1fr; gap: var(--space-4); align-items: center; border-bottom: 1px solid var(--border-primary); transition: background-color var(--transition-fast); ${index === 6 ? 'border-bottom: none;' : ''}">
+                <div class="schedule-row" style="padding: var(--space-4) var(--space-6); display: grid; grid-template-columns: 120px 1fr 60px 1fr; gap: var(--space-4); align-items: center; border-bottom: 1px solid var(--border-primary); transition: background-color var(--transition-fast); ${index === 6 ? 'border-bottom: none;' : ''}">
                     <div style="font-weight: 600; color: ${isWeekend ? 'var(--warning)' : 'var(--text-primary)'}; font-size: var(--font-size-base);">${day}</div>
                     
                     <div style="display: flex; align-items: center; gap: var(--space-3);">
@@ -52,6 +50,13 @@ async function showSchedule(userId) {
                             <button type="button" onclick="adjustScheduleTime('${dayKey}', 0.25)" style="width: 32px; height: 32px; border: 1px solid var(--border-primary); background: var(--bg-elevated); color: var(--text-primary); border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; cursor: pointer; font-weight: 600;">+</button>
                         </div>
                         <span style="font-size: var(--font-size-sm); color: var(--text-tertiary); min-width: 40px;">hours</span>
+                    </div>
+                    
+                    <div style="display: flex; justify-content: center;">
+                        <input type="checkbox" 
+                               id="${dayKey}_enable_time_range" 
+                               ${hasCustomTimeRange ? 'checked' : ''} 
+                               style="width: 18px; height: 18px;">
                     </div>
                     
                     <div style="display: flex; align-items: center; gap: var(--space-2);">
@@ -157,24 +162,15 @@ async function submitSchedule() {
         sunday: parseFloat(document.getElementById('sunday').value || 0)
     };
 
-    // Only include time ranges if the checkbox is checked
-    const enableTimeRanges = document.getElementById('enable-time-ranges').checked;
-    if (enableTimeRanges) {
-        scheduleData.monday_start_time = document.getElementById('monday_start_time').value;
-        scheduleData.monday_end_time = document.getElementById('monday_end_time').value;
-        scheduleData.tuesday_start_time = document.getElementById('tuesday_start_time').value;
-        scheduleData.tuesday_end_time = document.getElementById('tuesday_end_time').value;
-        scheduleData.wednesday_start_time = document.getElementById('wednesday_start_time').value;
-        scheduleData.wednesday_end_time = document.getElementById('wednesday_end_time').value;
-        scheduleData.thursday_start_time = document.getElementById('thursday_start_time').value;
-        scheduleData.thursday_end_time = document.getElementById('thursday_end_time').value;
-        scheduleData.friday_start_time = document.getElementById('friday_start_time').value;
-        scheduleData.friday_end_time = document.getElementById('friday_end_time').value;
-        scheduleData.saturday_start_time = document.getElementById('saturday_start_time').value;
-        scheduleData.saturday_end_time = document.getElementById('saturday_end_time').value;
-        scheduleData.sunday_start_time = document.getElementById('sunday_start_time').value;
-        scheduleData.sunday_end_time = document.getElementById('sunday_end_time').value;
-    }
+    // Only include time ranges for days where the checkbox is checked
+    const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
+    days.forEach(day => {
+        const enableTimeRange = document.getElementById(`${day}_enable_time_range`).checked;
+        if (enableTimeRange) {
+            scheduleData[`${day}_start_time`] = document.getElementById(`${day}_start_time`).value;
+            scheduleData[`${day}_end_time`] = document.getElementById(`${day}_end_time`).value;
+        }
+    });
     
     console.log('Saving schedule:', scheduleData);
     
