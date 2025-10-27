@@ -20,6 +20,12 @@ async function showSchedule(userId) {
         document.getElementById('scheduleModalUsername').textContent = user;
         document.getElementById('scheduleUserId').value = userId;
         
+        // Set checkbox state based on whether time ranges are non-default
+        const hasCustomTimeRanges = Object.values(schedule.intervals || {}).some(interval => 
+            interval.start_time !== '00:00' || interval.end_time !== '23:59'
+        );
+        document.getElementById('enable-time-ranges').checked = hasCustomTimeRanges;
+        
         const scheduleRows = document.getElementById('schedule-rows');
         scheduleRows.innerHTML = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'].map((day, index) => {
             const dayKey = day.toLowerCase();
@@ -148,23 +154,27 @@ async function submitSchedule() {
         thursday: parseFloat(document.getElementById('thursday').value || 0),
         friday: parseFloat(document.getElementById('friday').value || 0),
         saturday: parseFloat(document.getElementById('saturday').value || 0),
-        sunday: parseFloat(document.getElementById('sunday').value || 0),
-        
-        monday_start_time: document.getElementById('monday_start_time').value,
-        monday_end_time: document.getElementById('monday_end_time').value,
-        tuesday_start_time: document.getElementById('tuesday_start_time').value,
-        tuesday_end_time: document.getElementById('tuesday_end_time').value,
-        wednesday_start_time: document.getElementById('wednesday_start_time').value,
-        wednesday_end_time: document.getElementById('wednesday_end_time').value,
-        thursday_start_time: document.getElementById('thursday_start_time').value,
-        thursday_end_time: document.getElementById('thursday_end_time').value,
-        friday_start_time: document.getElementById('friday_start_time').value,
-        friday_end_time: document.getElementById('friday_end_time').value,
-        saturday_start_time: document.getElementById('saturday_start_time').value,
-        saturday_end_time: document.getElementById('saturday_end_time').value,
-        sunday_start_time: document.getElementById('sunday_start_time').value,
-        sunday_end_time: document.getElementById('sunday_end_time').value
+        sunday: parseFloat(document.getElementById('sunday').value || 0)
     };
+
+    // Only include time ranges if the checkbox is checked
+    const enableTimeRanges = document.getElementById('enable-time-ranges').checked;
+    if (enableTimeRanges) {
+        scheduleData.monday_start_time = document.getElementById('monday_start_time').value;
+        scheduleData.monday_end_time = document.getElementById('monday_end_time').value;
+        scheduleData.tuesday_start_time = document.getElementById('tuesday_start_time').value;
+        scheduleData.tuesday_end_time = document.getElementById('tuesday_end_time').value;
+        scheduleData.wednesday_start_time = document.getElementById('wednesday_start_time').value;
+        scheduleData.wednesday_end_time = document.getElementById('wednesday_end_time').value;
+        scheduleData.thursday_start_time = document.getElementById('thursday_start_time').value;
+        scheduleData.thursday_end_time = document.getElementById('thursday_end_time').value;
+        scheduleData.friday_start_time = document.getElementById('friday_start_time').value;
+        scheduleData.friday_end_time = document.getElementById('friday_end_time').value;
+        scheduleData.saturday_start_time = document.getElementById('saturday_start_time').value;
+        scheduleData.saturday_end_time = document.getElementById('saturday_end_time').value;
+        scheduleData.sunday_start_time = document.getElementById('sunday_start_time').value;
+        scheduleData.sunday_end_time = document.getElementById('sunday_end_time').value;
+    }
     
     console.log('Saving schedule:', scheduleData);
     
