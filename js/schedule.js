@@ -162,13 +162,17 @@ async function submitSchedule() {
         sunday: parseFloat(document.getElementById('sunday').value || 0)
     };
 
-    // Only include time ranges for days where the checkbox is checked
+    // Always include time ranges - use full range when checkbox is unchecked
     const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
     days.forEach(day => {
         const enableTimeRange = document.getElementById(`${day}_enable_time_range`).checked;
         if (enableTimeRange) {
             scheduleData[`${day}_start_time`] = document.getElementById(`${day}_start_time`).value;
             scheduleData[`${day}_end_time`] = document.getElementById(`${day}_end_time`).value;
+        } else {
+            // When time range is disabled, set to full range (00:00-23:59)
+            scheduleData[`${day}_start_time`] = '00:00';
+            scheduleData[`${day}_end_time`] = '23:59';
         }
     });
     
